@@ -22,15 +22,16 @@
 using namespace std;
 using namespace rapidjson;
 
-static const char *triggered = QUOTE({
-			"set" : {
-				"name" : "value"
-			}
-		});
-static const char *cleared = QUOTE({
-			"set" : {
-				"name" : "value"
-		});
+#define TRIGGERED	QUOTE({				\
+			"values" : {			\
+				"name" : "value"	\
+			}				\
+		})
+
+#define CLEARED	 QUOTE({				\
+			"values" : {			\
+				"name" : "value"	\
+		})
 
 /**
  * Plugin specific default configuration
@@ -52,13 +53,13 @@ const char * default_config = QUOTE({
 	"triggerValue": {
 		"description": "The value to set in item when the notification triggers",
 		"type": "JSON",
-		"default": triggered,
+		"default": TRIGGERED,
 		"order": "2",
 		"displayName" : "Trigger Value" },
 	"clearValue": {
 		"displayName": "Cleared Value",
 		"type": "JSON",
-		"default": cleared,
+		"default": CLEARED,
 		"order": "3",
 		"description" : "The value to set in the item when the notification clears" },
 	 "enable": {
