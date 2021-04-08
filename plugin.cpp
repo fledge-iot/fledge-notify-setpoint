@@ -31,6 +31,7 @@ using namespace rapidjson;
 #define CLEARED	 QUOTE({				\
 			"values" : {			\
 				"name" : "value"	\
+				}			\
 		})
 
 /**
