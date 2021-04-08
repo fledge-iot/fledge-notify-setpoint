@@ -139,7 +139,6 @@ bool SetPointDelivery::notify(const string& notificationName,
 		SimpleWeb::Client<SimpleWeb::HTTP> http(addressAndPort);
 
 		string url = string("http://") + addressAndPort + "/fledge/south/setpoint";
-		Logger::getLogger()->fatal("PUT %s with payload %s", url.c_str(), value.c_str());
 		try {
 			auto res = http.request("PUT", url, value);
 			if (res->status_code.compare("200 OK"))
