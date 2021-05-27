@@ -130,6 +130,7 @@ bool SetPointDelivery::notify(const string& notificationName,
 		if (!m_mngmtClient->getService(service))
 		{
 			Logger::getLogger()->error("Unable to find service '%s'", m_southService.c_str());
+			return false;
 		}
 		string address = service.getAddress();
 		unsigned short port = service.getPort();
@@ -138,6 +139,7 @@ bool SetPointDelivery::notify(const string& notificationName,
 		SimpleWeb::Client<SimpleWeb::HTTP> http(addressAndPort);
 
 		string url = string("http://") + addressAndPort + "/fledge/south/setpoint";
+		Logger::getLogger()->fatal("PUT %s with payload %s", url.c_str(), value.c_str());
 		try {
 			auto res = http.request("PUT", url, value);
 			if (res->status_code.compare("200 OK"))
