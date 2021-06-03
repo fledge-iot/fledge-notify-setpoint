@@ -138,10 +138,10 @@ bool SetPointDelivery::notify(const string& notificationName,
 		snprintf(addressAndPort, sizeof(addressAndPort), "%s:%d", address.c_str(), port);
 		SimpleWeb::Client<SimpleWeb::HTTP> http(addressAndPort);
 
-		string url = string("http://") + addressAndPort + "/fledge/south/setpoint";
-		Logger::getLogger()->fatal("PUT %s with payload %s", url.c_str(), value.c_str());
+		string url = "/fledge/south/setpoint";
 		try {
-			auto res = http.request("PUT", url, value);
+			SimpleWeb::CaseInsensitiveMultimap headers = {{"Content-Type", "application/json"}};
+			auto res = http.request("PUT", url, value, headers);
 			if (res->status_code.compare("200 OK"))
 			{
 				Logger::getLogger()->error("Failed to send set point operation to service %s, %s",
