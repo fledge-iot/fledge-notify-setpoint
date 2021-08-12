@@ -45,6 +45,7 @@ class SetPointDelivery
 
 
 	private:
+		void 		dataSubstitution(string& message, const Value& obj);
 		bool		m_enable;
 		std::string	m_southService;
 		std::string	m_triggerValue;
