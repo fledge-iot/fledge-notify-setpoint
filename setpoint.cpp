@@ -226,7 +226,7 @@ void SetPointDelivery::dataSubstitution(string& message, const Value& obj)
 	size_t dstart;
 	while ((dstart = message.find_first_of("$", p1)) != string::npos)
 	{
-		rval.append(message.substr(p1, dstart));
+		rval.append(message.substr(p1, dstart - p1));
 		dstart++;
 		size_t dend = message.find_first_of ("$", dstart);
 		if (dend != string::npos)
@@ -235,6 +235,8 @@ void SetPointDelivery::dataSubstitution(string& message, const Value& obj)
 			size_t p2 = var.find_first_of(".");
 			string asset = var.substr(0, p2);
 			string datapoint = var.substr(p2 + 1);
+			Logger::getLogger()->debug("Looking for asset %s, data point %s",
+					asset.c_str(), datapoint.c_str());
 			if (obj.HasMember(asset.c_str()) && obj[asset.c_str()].IsObject())
 			{
 				const Value& dp = obj[asset.c_str()];
