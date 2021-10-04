@@ -114,6 +114,10 @@ bool SetPointDelivery::notify(const string& notificationName,
 		{
 			return false;
 		}
+		if (doc.HasMember("data") && doc["data"].IsObject())
+		{
+			dataSubstitution(value, doc["data"].GetObject());
+		}
 	}
 	else
 	{
@@ -211,3 +215,71 @@ void SetPointDelivery::configure(ConfigCategory *category)
 	}
 }
 
+/**
+ * Substitute varaibles with reading data
+ */
+void SetPointDelivery::dataSubstitution(string& message, const Value& obj)
+{
+	string rval("");
+	size_t p1 = 0;
+
+	size_t dstart;
+	while ((dstart = message.find_first_of("$", p1)) != string::npos)
+	{
+		rval.append(message.substr(p1, dstart - p1));
+		dstart++;
+		size_t dend = message.find_first_of ("$", dstart);
+		if (dend != string::npos)
+		{
+			string var = message.substr(dstart, dend - dstart);
+			size_t p2 = var.find_first_of(".");
+			string asset = var.substr(0, p2);
+			string datapoint = var.substr(p2 + 1);
+			Logger::getLogger()->debug("Looking for asset %s, data point %s",
+					asset.c_str(), datapoint.c_str());
+			if (obj.HasMember(asset.c_str()) && obj[asset.c_str()].IsObject())
+			{
+				const Value& dp = obj[asset.c_str()];
+				if (dp.HasMember(datapoint.c_str()))
+				{
+					const Value& dpv = dp[datapoint.c_str()];
+					if (dpv.IsString())
+					{
+						rval.append(dpv.GetString());
+					}
+					else if (dpv.IsDouble())
+					{
+						char buf[40];
+						snprintf(buf, sizeof(buf), "%f", dpv.GetDouble());
+						rval.append(buf);
+					}
+					else if (dpv.IsInt64())
+					{
+						char buf[40];
+						snprintf(buf, sizeof(buf), "%ld", dpv.GetInt64());
+						rval.append(buf);
+					}
+				}
+				else
+				{
+					Logger::getLogger()->error("There is no datapoint '%s' in the '%s asset received",
+						       datapoint.c_str(), asset.c_str());
+				}
+			}
+			else
+			{
+				Logger::getLogger()->error("There is no asset '%s' in the data received", asset.c_str());
+			}
+		}
+		else
+		{
+			Logger::getLogger()->error("Unterminated macro substitution in '%s':%ld", message.c_str(), p1);
+		}
+		p1 = dend + 1;
+	}
+	rval.append(message.substr(p1));
+
+	Logger::getLogger()->debug("'%s'", message.c_str());
+	Logger::getLogger()->debug("became '%s'", rval.c_str());
+	message = rval;
+}
