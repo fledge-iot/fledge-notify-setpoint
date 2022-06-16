@@ -36,7 +36,7 @@ class SetPointDelivery
 		void setManagementClient()
 		{
 			if (m_service)
-				m_mngmtClient = m_service->getManagementClient();
+				m_mngmtClient = m_service->getMgmtClient();
 			else
 				m_mngmtClient = NULL;
 		}	
