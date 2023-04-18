@@ -1,5 +1,5 @@
 /*
- * FogLAMP SetPoint Delivery plugin
+ * Fledge SetPoint Delivery plugin
  *
  * Copyright (c) 2021 Dianomic Systems
  *

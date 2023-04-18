@@ -1,5 +1,5 @@
 /*
- * FogLAMP Configuration Delivery plugin
+ * Fledge Configuration Delivery plugin
  *
  * Copyright (c) 2020 Dianomic Systems
  *

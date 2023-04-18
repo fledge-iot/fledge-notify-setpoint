@@ -1,5 +1,5 @@
 /*
- * FogLAMP notification delivery plugin that executes
+ * Fledge notification delivery plugin that executes
  * setpoint control on a south service.
  *
  * Copyright (c) 2021 Dianomic Systems
